@@ -22,6 +22,10 @@ env:
 
 jobs:
   build:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -38,27 +42,6 @@ jobs:
 
       - name: yarn build
         run: yarn build
-
-      - name: Upload Cache app
-        uses: actions/cache@v4
-        with:
-          path: dist/
-          key: ${{ runner.os }}-app-${{ github.sha }}
-  deploy:
-    needs: build
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download Cache app
-        uses: actions/cache@v4
-        with:
-          path: dist/
-          key: ${{ runner.os }}-app-${{ github.sha }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
